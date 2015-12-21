@@ -1,0 +1,19 @@
+{% set os_map = salt['grains.filter_by']({
+    'Debian': {
+        'pkg': 'pdns-backend-mysql',
+        'config': '/etc/powerdns/pdns.d/pdns.local.gmysql.conf',
+    },
+}, merge=salt['pillar.get']('powerdns:mysql:lookup')) %}
+
+{% set defaults = {
+    'mysql': {
+        'settings': {
+            'gmysql-host': '127.0.0.1',
+            'gmysql-user': 'pdns',
+            'gmysql-dbname': 'pdns'
+        },
+    },
+} %}
+
+{% do defaults.mysql.update(os_map) %}
+{% set mysql = salt['pillar.get']('powerdns:mysql', default=defaults.mysql, merge=True) %}

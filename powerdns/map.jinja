@@ -1,0 +1,36 @@
+{% set os_map = salt['grains.filter_by']({
+    'Debian': {
+        'config': '/etc/powerdns/pdns.conf',
+        'config_dir': '/etc/powerdns',
+        'include_dir': '/etc/powerdns/pdns.d',
+        'module_dir': '/usr/lib/x86_64-linux-gnu/pdns',
+        'socket_dir': '/var/run',
+        'pkg': 'pdns-server',
+        'service': 'pdns',
+        'user': 'pdns',
+        'group': 'pdns',
+    },
+}, merge=salt['pillar.get']('powerdns:lookup')) %}
+
+{% set defaults = {
+    'powerdns': {
+        'settings': {
+            'allow-recursion': '127.0.0.1',
+            'config-dir': os_map.config_dir,
+            'daemon': 'yes',
+            'disable-axfr': 'no',
+            'guardian': 'yes',
+            'launch': 'gmysql',
+            'local-port': '53',
+            'master': 'yes',
+            'setgid': os_map.user,
+            'module-dir': os_map.module_dir,
+            'socket-dir': os_map.socket_dir,
+            'version-string': '',
+            'include-dir': os_map.include_dir,
+        },
+    },
+} %}
+
+{% do defaults.powerdns.update(os_map) %}
+{% set powerdns = salt['pillar.get']('powerdns', default=defaults.powerdns, merge=True) %}
