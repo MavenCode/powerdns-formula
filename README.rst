@@ -7,6 +7,9 @@ Install, configure and run ``powerdns``.
     See the full `Salt Formulas installation and usage instructions
     <http://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html>`_.
 
+The formula has been made because `official
+<https://github.com/saltstack-formulas/powerdns-formula>`_ one is too specific.
+
 Available states
 ================
 
